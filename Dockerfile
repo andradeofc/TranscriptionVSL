@@ -1,6 +1,9 @@
 # Usar uma imagem base do Python
 FROM python:3.9
 
+# Instalar ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Definir o diretório de trabalho no contêiner
 WORKDIR /app
 
@@ -12,7 +15,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Expor a porta que a aplicação usará
-EXPOSE 5000
+EXPOSE 8080
 
 # Comando para iniciar a aplicação
 CMD ["python", "app.py"]
