@@ -8,10 +8,10 @@ import logging
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'processed'
-ASSEMBLYAI_API_KEY = '7b928535263d4f80b130462a80a16000'
+ASSEMBLYAI_API_KEY = os.getenv('ASSEMBLYAI_API_KEY', 'default_assemblyai_key')
 ASSEMBLYAI_TRANSCRIPT_ENDPOINT = 'https://api.assemblyai.com/v2/transcript'
 ASSEMBLYAI_UPLOAD_ENDPOINT = 'https://api.assemblyai.com/v2/upload'
-OPENAI_API_KEY = 'sk-proj-TAlQsgkdFdAcqpsSyYUdT3BlbkFJf3DAvo1e6q7yMboGTUMG'
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'default_openai_key')
 MAX_TOKENS = 2048
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w',
