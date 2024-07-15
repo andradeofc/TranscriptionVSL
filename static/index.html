@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de MP4 para MP3 e Transcrição</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <img src="static/icone.png" alt="Logo" class="logo">
+        <h1>Conversor de MP4 para MP3 e Transcrição</h1>
+        <input type="url" id="urlInput" placeholder="Insira o link .m3u8">
+        <button onclick="processLink()">Processar</button>
+        <div id="progress">
+            <p id="status">Status: Aguardando</p>
+            <progress id="progressBar" value="0" max="100"></progress>
+        </div>
+        <div id="downloadLinks" style="display: none;">
+            <h3>Downloads:</h3>
+            <a id="rawDownload" class="download-btn" href="#" download>Transcrição Bruta</a><br>
+            <a id="formattedDownload" class="download-btn" href="#" download>Transcrição Formatada</a>
+        </div>
+        <p id="message" style="color: red;"></p>
+    </div>
+    <script>
+        async function processLink() {
+            const urlInput = document.getElementById('urlInput');
+            const m3u8_url = urlInput.value;
+            const messageElement = document.getElementById('message');
+
+            if (!m3u8_url) {
+                alert('Por favor, insira um link .m3u8.');
+                return;
+            }
+
+            // Limpar mensagens anteriores e estado da interface
+            messageElement.innerText = '';
+            document.getElementById('progress').style.display = 'block';
+            document.getElementById('status').innerText = 'Obtendo áudio...';
+            document.getElementById('progressBar').value = 10;
+            document.getElementById('downloadLinks').style.display = 'none';
+
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ m3u8_url })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById('status').innerText = 'Fazendo transcrição...';
+                    document.getElementById('progressBar').value = 50;
+
+                    // Simular tempo de espera para transcrição (apenas para fins de demonstração)
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+
+                    document.getElementById('status').innerText = 'Fazendo formatação de texto...';
+                    document.getElementById('progressBar').value = 80;
+
+                    // Simular tempo de espera para formatação (apenas para fins de demonstração)
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+
+                    document.getElementById('progressBar').value = 100;
+                    document.getElementById('status').innerText = 'Processo concluído.';
+                    document.getElementById('downloadLinks').style.display = 'block';
+                    document.getElementById('rawDownload').href = '/download/' + result.raw_text_file;
+                    document.getElementById('formattedDownload').href = '/download/' + result.formatted_text_file;
+                } else {
+                    messageElement.innerText = result.error;
+                }
+            } catch (error) {
+                messageElement.innerText = 'Erro ao processar o link.';
+            }
+        }
+    </script>
+</body>
+</html>
