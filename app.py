@@ -111,7 +111,6 @@ def format_text_with_gpt(text):
     return formatted_text
 
 def split_text_into_chunks(text, max_tokens):
-    # Dividir o texto em pedaços que não ultrapassem o limite de tokens
     words = text.split()
     chunks = []
     current_chunk = []
@@ -187,4 +186,4 @@ def download_file(filename):
         return jsonify({'error': 'File not found'}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
